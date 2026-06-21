@@ -31,8 +31,13 @@ def main() -> None:
     ap.add_argument("--hf-repo", default=None)
     args = ap.parse_args()
 
-    from sentence_transformers import CrossEncoder, InputExample
-    from torch.utils.data import DataLoader
+    from datasets import Dataset
+    from sentence_transformers.cross_encoder import (
+        CrossEncoder,
+        CrossEncoderTrainer,
+        CrossEncoderTrainingArguments,
+    )
+    from sentence_transformers.cross_encoder.losses import BinaryCrossEntropyLoss
 
     examples = load(split="train")
     if not examples:
@@ -40,26 +45,34 @@ def main() -> None:
             "no train data — run: data/generate.py --source training_v1 --split train --total 5000"
         )
     rng = random.Random(0)
-    samples: list[InputExample] = []
+    q, p, y = [], [], []
     for ex in examples:
         gold = next(c for c in ex.categories if c.name == ex.gold)
-        samples.append(InputExample(texts=[ex.transaction.description, category_text(gold)], label=1.0))
+        q.append(ex.transaction.description); p.append(category_text(gold)); y.append(1.0)
         negs = [c for c in ex.categories if c.name != ex.gold]
         for neg in rng.sample(negs, min(args.negatives, len(negs))):
-            samples.append(
-                InputExample(texts=[ex.transaction.description, category_text(neg)], label=0.0)
-            )
-    print(f"cross-encoder fine-tune: {len(samples)} pairs, base={args.base}, epochs={args.epochs}")
+            q.append(ex.transaction.description); p.append(category_text(neg)); y.append(0.0)
+    ds = Dataset.from_dict({"query": q, "passage": p, "label": y})
+    print(f"cross-encoder fine-tune: {len(ds)} pairs, base={args.base}, epochs={args.epochs}")
 
     model = CrossEncoder(args.base, num_labels=1)
-    loader = DataLoader(samples, shuffle=True, batch_size=args.batch_size)
-    model.fit(
-        train_dataloader=loader,
-        epochs=args.epochs,
-        warmup_steps=int(len(loader) * args.epochs * 0.1),
-        show_progress_bar=True,
+    trainer = CrossEncoderTrainer(
+        model=model,
+        args=CrossEncoderTrainingArguments(
+            # checkpoints go to a separate dir; the final model is saved cleanly to args.out
+            output_dir=args.out + "_ckpt",
+            num_train_epochs=args.epochs,
+            per_device_train_batch_size=args.batch_size,
+            warmup_ratio=0.1,
+            report_to=[],
+            logging_strategy="no",
+            save_strategy="no",
+        ),
+        train_dataset=ds,
+        loss=BinaryCrossEntropyLoss(model),
     )
-    model.save(args.out)
+    trainer.train()
+    model.save_pretrained(args.out)
     print(f"saved -> {args.out}")
     if args.hf_repo:
         model.push_to_hub(args.hf_repo)

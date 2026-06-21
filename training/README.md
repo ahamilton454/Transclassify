@@ -40,7 +40,11 @@ here pins the training deps (used by HF Jobs / for reproducibility; `peft`/`trl`
 | name | strategy | base | HF id / path | eval (llm_generated overall) |
 |---|---|---|---|---|
 | bge-bi-v1 | bi_encoder | bge-small-en-v1.5 | `training/bi_encoder/output` | **75.7%** (zero-shot was 50.0%) |
-| _bge-cross-v1_ | cross_encoder | bge-reranker-base | _(fill)_ | _(fill)_ |
+| _bge-cross-v1_ | cross_encoder | bge-reranker-base | _(run to fill)_ | _(run to fill)_ |
 
 Reference points on `llm_generated` (n=1013): zero-shot bi 50% · zero-shot cross 38% · gpt-5-mini 86%.
-The bi-encoder fine-tune (1 epoch, 5.8k synthetic examples, ~44s on a Mac) jumped **50 → 75.7%**.
+The bi-encoder fine-tune (1 epoch, 5.8k synthetic examples, **~44s** on a Mac) jumped **50 → 75.7%**.
+
+Note: the cross-encoder fine-tune is ~**40 min** on CPU (bigger model, N×M pairs) — trigger it
+explicitly (or on a GPU / HF Job). The bi-encoder is the priority since it also meets the throughput
+goal; a trained cross-encoder may score higher but is slower at inference.
