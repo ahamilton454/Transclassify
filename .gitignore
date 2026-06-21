@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Env / secrets
+.env
+.env.local
+
+# Generated API client
+frontend/src/api/generated/
+
+# OS
+.DS_Store
+
+# Local run logs
+.run/
+
+# Eval artifacts (generated/fetched data + results; regenerate with prepare.py/generate.py)
+evals/results/
+evals/dodatathings/data.jsonl
+evals/category_sets/dodatathings_us_v2.json
+evals/llm_generated/data.jsonl

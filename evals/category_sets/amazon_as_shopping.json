@@ -1,0 +1,8 @@
+{
+  "id": "amazon_as_shopping",
+  "categories": [
+    { "name": "Shopping", "description": "I shop on Amazon mostly, also Target" },
+    { "name": "Groceries", "description": "supermarkets like Whole Foods and Trader Joe's" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

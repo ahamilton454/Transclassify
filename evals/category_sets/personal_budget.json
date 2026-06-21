@@ -1,0 +1,21 @@
+{
+  "id": "personal_budget",
+  "categories": [
+    { "name": "Groceries", "description": "supermarkets and grocery stores" },
+    { "name": "Restaurants & Dining", "description": "restaurants, bars, takeout, food delivery" },
+    { "name": "Coffee Shops", "description": "coffee shops and cafes" },
+    { "name": "Transportation", "description": "rideshare, taxis, public transit, parking, tolls" },
+    { "name": "Gas & Fuel", "description": "gas stations and fuel" },
+    { "name": "Shopping", "description": "retail, clothing, electronics, general online marketplaces" },
+    { "name": "Subscriptions", "description": "streaming, software, and memberships billed regularly" },
+    { "name": "Bills & Utilities", "description": "electricity, water, internet, phone, insurance" },
+    { "name": "Rent & Housing", "description": "rent and mortgage payments" },
+    { "name": "Health & Medical", "description": "pharmacy, doctors, dentist, gym, wellness" },
+    { "name": "Entertainment", "description": "movies, concerts, events, games, hobbies" },
+    { "name": "Travel", "description": "flights, hotels, rental cars, vacation spending" },
+    { "name": "Income", "description": "paychecks, deposits, and refunds" },
+    { "name": "Transfers", "description": "account transfers, P2P (Venmo/Zelle), credit card payments" },
+    { "name": "Fees", "description": "bank fees, ATM fees, interest charges" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

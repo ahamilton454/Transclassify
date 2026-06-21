@@ -1,0 +1,19 @@
+{
+  "id": "freelancer_schedule_c",
+  "categories": [
+    { "name": "Advertising", "description": "marketing, ads, promotion, sponsorships" },
+    { "name": "Contract Labor", "description": "payments to subcontractors and freelancers" },
+    { "name": "Software & Subscriptions", "description": "SaaS and digital tools used for the business" },
+    { "name": "Office Supplies", "description": "consumable supplies and small office items" },
+    { "name": "Equipment", "description": "computers, cameras, and larger equipment purchases" },
+    { "name": "Business Meals", "description": "client and work-related meals (deductible)" },
+    { "name": "Travel", "description": "business flights, hotels, ground transport" },
+    { "name": "Utilities & Home Office", "description": "internet, phone, and home-office portion of bills" },
+    { "name": "Professional Services", "description": "legal, accounting, consulting, and other professional fees" },
+    { "name": "Bank & Merchant Fees", "description": "payment processing and bank fees" },
+    { "name": "Business Income", "description": "client payments and business deposits" },
+    { "name": "Owner Draw / Personal", "description": "personal, non-business spending and owner draws" },
+    { "name": "Taxes & Licenses", "description": "estimated taxes, business licenses, permits" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

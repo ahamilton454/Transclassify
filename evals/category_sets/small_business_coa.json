@@ -1,0 +1,24 @@
+{
+  "id": "small_business_coa",
+  "categories": [
+    { "name": "Sales Revenue", "description": "income from sales of products or services" },
+    { "name": "Cost of Goods Sold", "description": "inventory, materials, and direct costs of goods sold" },
+    { "name": "Payroll & Wages", "description": "employee salaries, wages, payroll runs" },
+    { "name": "Contractor Payments", "description": "payments to 1099 contractors and vendors" },
+    { "name": "Rent & Lease", "description": "office, retail, or equipment rent and leases" },
+    { "name": "Utilities", "description": "electricity, water, gas, internet, phone for the business" },
+    { "name": "Software & SaaS", "description": "business software and cloud subscriptions" },
+    { "name": "Office Supplies", "description": "consumable office and shop supplies" },
+    { "name": "Marketing & Advertising", "description": "ads, marketing services, promotion" },
+    { "name": "Travel", "description": "business travel: flights, hotels, transport" },
+    { "name": "Meals & Entertainment", "description": "business meals and client entertainment" },
+    { "name": "Professional Fees", "description": "legal, accounting, and consulting services" },
+    { "name": "Insurance", "description": "business insurance premiums" },
+    { "name": "Bank & Merchant Fees", "description": "bank charges and payment processing fees" },
+    { "name": "Taxes & Licenses", "description": "business taxes, licenses, permits, registrations" },
+    { "name": "Equipment & Furniture", "description": "equipment, machinery, and furniture purchases" },
+    { "name": "Loan & Interest Payments", "description": "loan repayments and interest" },
+    { "name": "Owner's Draw", "description": "owner withdrawals and distributions" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

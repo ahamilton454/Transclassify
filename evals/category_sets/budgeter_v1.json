@@ -1,0 +1,12 @@
+{
+  "id": "budgeter_v1",
+  "categories": [
+    { "name": "Food & Drink", "description": "restaurants, bars, groceries, takeout" },
+    { "name": "Coffee", "parent": "Food & Drink", "description": "coffee shops and cafes" },
+    { "name": "Transport", "description": "rideshare, transit, gas, parking" },
+    { "name": "Shopping", "description": "retail and online purchases" },
+    { "name": "Subscriptions", "description": "recurring software & media" },
+    { "name": "Income", "description": "paychecks and deposits" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

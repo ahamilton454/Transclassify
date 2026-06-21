@@ -1,0 +1,8 @@
+{
+  "id": "amazon_as_groceries",
+  "categories": [
+    { "name": "Shopping", "description": "clothes and electronics" },
+    { "name": "Groceries", "description": "food, including my Amazon Fresh and Whole Foods orders" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "freelancer_v1",
+  "categories": [
+    { "name": "Business Meals", "description": "client meals and work coffee (deductible)" },
+    { "name": "Software", "description": "SaaS and developer tools used for work" },
+    { "name": "Office Supplies", "description": "physical supplies and equipment for work" },
+    { "name": "Income", "description": "client payments and deposits" },
+    { "name": "Personal", "description": "non-business personal spending" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

@@ -1,0 +1,565 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Transclassify",
+    "summary": "Transaction categorization & enrichment API \u2014 bring your own categories.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/categorize": {
+      "post": {
+        "tags": [
+          "categorize"
+        ],
+        "summary": "Categorize",
+        "description": "Categorize each transaction into one of the caller's categories.",
+        "operationId": "categorize_v1_categorize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategorizeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategorizeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/enrich": {
+      "post": {
+        "tags": [
+          "enrich"
+        ],
+        "summary": "Enrich",
+        "description": "Categorize and add merchant metadata via a single web-search lookup per row.",
+        "operationId": "enrich_v1_enrich_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnrichRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrichResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CategorizeRequest": {
+        "properties": {
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Transactions"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Categories"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transactions",
+          "categories"
+        ],
+        "title": "CategorizeRequest"
+      },
+      "CategorizeResponse": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "total_cost_usd": {
+            "type": "number",
+            "title": "Total Cost Usd",
+            "description": "Summed USD cost across all rows."
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/CategorizeResult"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "total_cost_usd",
+          "results"
+        ],
+        "title": "CategorizeResponse"
+      },
+      "CategorizeResult": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "merchant": {
+            "type": "string",
+            "title": "Merchant",
+            "description": "Cleaned, human-readable merchant name."
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "Chosen category (always one of the supplied names)."
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "description": "Model self-reported 0\u20131 (soft signal)."
+          },
+          "cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Usd",
+            "description": "USD cost of this row (LLM + any web lookup), if known."
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error",
+            "description": "Set if this row could not be processed."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "merchant",
+          "category",
+          "confidence"
+        ],
+        "title": "CategorizeResult"
+      },
+      "Category": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Category name, returned verbatim when chosen."
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Optional hint/definition for the model."
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent",
+            "description": "Name of the parent category, if a subcategory."
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id",
+            "description": "Optional stable id."
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Category",
+        "description": "One caller-defined category. The model picks from these names only.\n\nCategories may form a hierarchy via `parent` (a subcategory names its parent\ncategory). v1 treats the chosen label as flat for scoring; the hierarchy is\nsurfaced to the model for context."
+      },
+      "EnrichRequest": {
+        "properties": {
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Transactions"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Categories"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transactions",
+          "categories"
+        ],
+        "title": "EnrichRequest",
+        "description": "Same inputs as categorize; the route adds merchant metadata."
+      },
+      "EnrichResponse": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "total_cost_usd": {
+            "type": "number",
+            "title": "Total Cost Usd",
+            "description": "Summed USD cost across all rows."
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/EnrichResult"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "total_cost_usd",
+          "results"
+        ],
+        "title": "EnrichResponse"
+      },
+      "EnrichResult": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "merchant": {
+            "type": "string",
+            "title": "Merchant",
+            "description": "Cleaned, human-readable merchant name."
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "Chosen category (always one of the supplied names)."
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "description": "Model self-reported 0\u20131 (soft signal)."
+          },
+          "cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Usd",
+            "description": "USD cost of this row (LLM + any web lookup), if known."
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error",
+            "description": "Set if this row could not be processed."
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "logo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo",
+            "description": "Logo URL if found."
+          },
+          "mcc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mcc",
+            "description": "Merchant category code if known."
+          },
+          "recurring": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recurring",
+            "description": "Looks like a recurring charge."
+          },
+          "enrichment_confidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enrichment Confidence",
+            "description": "Confidence in the metadata above."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "merchant",
+          "category",
+          "confidence"
+        ],
+        "title": "EnrichResult"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Transaction": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Caller-supplied id, echoed back on the result."
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "Raw transaction string, e.g. 'SQ *STARBUCKS 1234'."
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount",
+            "description": "Signed amount; negative = outflow."
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date",
+            "description": "Transaction date (free-form / ISO)."
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata",
+            "description": "Arbitrary extra fields, preserved as-is."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "description"
+        ],
+        "title": "Transaction",
+        "description": "One raw transaction to categorize."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
