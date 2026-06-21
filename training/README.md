@@ -39,5 +39,8 @@ here pins the training deps (used by HF Jobs / for reproducibility; `peft`/`trl`
 
 | name | strategy | base | HF id / path | eval (llm_generated overall) |
 |---|---|---|---|---|
-| _bge-bi-v1_ | bi_encoder | bge-small-en-v1.5 | _(fill after push)_ | _(fill)_ |
+| bge-bi-v1 | bi_encoder | bge-small-en-v1.5 | `training/bi_encoder/output` | **75.7%** (zero-shot was 50.0%) |
 | _bge-cross-v1_ | cross_encoder | bge-reranker-base | _(fill)_ | _(fill)_ |
+
+Reference points on `llm_generated` (n=1013): zero-shot bi 50% · zero-shot cross 38% · gpt-5-mini 86%.
+The bi-encoder fine-tune (1 epoch, 5.8k synthetic examples, ~44s on a Mac) jumped **50 → 75.7%**.
