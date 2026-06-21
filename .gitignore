@@ -30,3 +30,7 @@ data/sources/dodatathings/
 data/sources/training_v1/
 data/category_sets/dodatathings_us_v2.json
 # data/sources/hand_labelled/ stays tracked (curated, git-legible)
+
+# Training artifacts (trained weights go to HF Hub, not git)
+training/**/output/
+training/.venv/

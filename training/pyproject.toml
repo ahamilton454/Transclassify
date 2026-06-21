@@ -1,0 +1,16 @@
+[project]
+name = "transclassify-training"
+version = "0.1.0"
+description = "Fine-tuning the categorizer models (encoders locally; LLM LoRA on HF Jobs)."
+requires-python = ">=3.11"
+# Encoder training runs in the backend venv (already has these). This file pins the
+# full training stack for reproducibility and for HF Jobs (`peft`/`trl` are llm_lora-only).
+dependencies = [
+    "sentence-transformers>=3.0",
+    "datasets>=3.0",
+    "huggingface_hub>=0.34",
+    "accelerate>=1.0",
+    "duckdb>=1.1",
+    "peft>=0.13",
+    "trl>=0.12",
+]
