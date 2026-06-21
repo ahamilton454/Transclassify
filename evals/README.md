@@ -1,9 +1,11 @@
 # Categorization evals
 
 Measures "good categorization" before we pick/tune a model. Runs the shared
-`models` categorizers (exactly what the backend ships) over labelled eval sets and
-reports **stratified accuracy** — with **tail accuracy as the headline**, since the
-long tail is the product wedge.
+`models` categorizers (exactly what the backend ships) over the **`split="eval"`** rows of the shared
+`data/` layer and reports **stratified accuracy**, with **tail accuracy as the headline**.
+
+The data itself (transactions, labelings, taxonomies) lives in **`data/`** — `evals/` is just the
+harness (runner + scorer). `--set` selects a `data/` source (all on the eval split).
 
 ## Run
 
@@ -23,8 +25,8 @@ backend/.venv/bin/python evals/run.py --set all --param model=gpt-5-mini --limit
 - **Unit:** `(transaction, categories-with-descriptions, gold)` triple. The category set
   **varies** across items (tests bring-your-own-categories) and category **descriptions can
   flip the gold**.
-- **Category sets** are a registry: `category_sets/<id>.json` (referenced by `category_set_id`;
-  inline `categories` allowed as a one-off override). They support **subcategories** via `parent`.
+- **Category sets** are a registry: `data/category_sets/<id>.json` (referenced by `category_set_id`).
+  They support **subcategories** via `parent`. (Build/refresh sources: see `data/README.md`.)
 - **Strata** tag each item (`tail`, `head`, `processor-prefix`, `p2p`, `income`, `ambiguous`,
   `description_dependent`, …); accuracy is reported per stratum.
 - **accept-sets** (`acceptable`) handle ambiguity; **`expected_other`** marks "none fits".

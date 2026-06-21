@@ -9,19 +9,21 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from evals.schema import EvalRecord
+from data.schema import Example
+
+# `results[i]` corresponds to `records[i]` (gather_bounded preserves order), so we
+# match positionally — robust even when two examples share a transaction id (a
+# description-flip pair is one transaction with two labelings).
 
 
-def is_correct(record: EvalRecord, predicted: str | None) -> bool:
+def is_correct(record: Example, predicted: str | None) -> bool:
     return predicted is not None and predicted in record.resolved_acceptable()
 
 
-def row_details(records: list[EvalRecord], results: list) -> list[dict]:
+def row_details(records: list[Example], results: list) -> list[dict]:
     """Per-row outcome (id, description, gold, predicted, correct, …) for logging."""
-    by_id = {r.id: r for r in results}
     rows = []
-    for rec in records:
-        res = by_id.get(rec.transaction.id) or by_id.get(rec.id)
+    for rec, res in zip(records, results):
         error = getattr(res, "error", None) if res is not None else None
         predicted = getattr(res, "category", None) if res is not None else None
         if error:
@@ -74,16 +76,14 @@ class ScoreReport:
         return s.accuracy if s else 0.0
 
 
-def score(records: list[EvalRecord], results: list) -> ScoreReport:
-    """Score predictions against records. `results` items expose .id/.category/.error/.cost_usd."""
-    by_id = {r.id: r for r in results}
+def score(records: list[Example], results: list) -> ScoreReport:
+    """Score predictions against records (positional: results[i] ↔ records[i])."""
     report = ScoreReport(n=len(records))
 
     # Track per-pair correctness for the flip-pair pass rate.
     pair_members: dict[str, list[bool]] = {}
 
-    for rec in records:
-        res = by_id.get(rec.transaction.id) or by_id.get(rec.id)
+    for rec, res in zip(records, results):
         predicted = getattr(res, "category", None) if res is not None else None
         if res is not None and getattr(res, "error", None):
             report.errors += 1

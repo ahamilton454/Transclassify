@@ -32,15 +32,13 @@ from app.config import settings  # noqa: E402 — triggers .env load + key expor
 from models.llm_incontext import engine  # noqa: E402
 from models.registry import get_categorizer  # noqa: E402
 
-from evals.loader import load_category_sets, load_records  # noqa: E402
+from data.store import load  # noqa: E402
+
 from evals.score import ScoreReport, row_details, score  # noqa: E402
 
 EVALS_DIR = ROOT / "evals"
+# Eval "sets" are sources in the unified data layer (all on split="eval").
 SETS = ["llm_generated", "dodatathings", "hand_labelled"]
-
-
-def _data_path(set_name: str) -> Path:
-    return EVALS_DIR / set_name / "data.jsonl"
 
 
 def _coerce(value: str):
@@ -71,14 +69,12 @@ def label_for(categorizer: str, params: dict) -> str:
 async def run_set(
     set_name: str, categorizer_name: str, params: dict, limit: int | None
 ) -> tuple[ScoreReport, float, list[dict]]:
-    registry = load_category_sets()
-    path = _data_path(set_name)
-    if not path.exists():
+    records = load(split="eval", source=set_name)
+    if not records:
         raise SystemExit(
-            f"no data for '{set_name}' at {path}."
-            + (" Run evals/dodatathings/prepare.py first." if set_name == "dodatathings" else "")
+            f"no eval data for source '{set_name}' under data/sources/{set_name}/."
+            + (" Run data/fetch_dodatathings.py first." if set_name == "dodatathings" else "")
         )
-    records = load_records(path, registry)
     if limit:
         records = records[:limit]
 

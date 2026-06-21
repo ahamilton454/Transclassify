@@ -23,8 +23,10 @@ frontend/src/api/generated/
 # Local run logs
 .run/
 
-# Eval artifacts (generated/fetched data + results; regenerate with prepare.py/generate.py)
+# Eval / dataset artifacts (generated or fetched; regenerate via data/generate.py + data/fetch_dodatathings.py)
 evals/results/
-evals/dodatathings/data.jsonl
-evals/category_sets/dodatathings_us_v2.json
-evals/llm_generated/data.jsonl
+data/sources/llm_generated/
+data/sources/dodatathings/
+data/sources/training_v1/
+data/category_sets/dodatathings_us_v2.json
+# data/sources/hand_labelled/ stays tracked (curated, git-legible)

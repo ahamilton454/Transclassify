@@ -12,9 +12,17 @@ no auth. (Caching/merchant-memo, the SERP cascade, auth, and billing are deliber
 
 ## Layout
 
+One top-level directory per concern, with a clear data flow:
+**`data/` provides → `models/` serves → `evals/` measures → `backend/`+`frontend/` ship**, and
+**`training/` produces the models** `models/` serves.
+
 ```
-backend/    FastAPI (Python) — the engine + /v1/categorize and /v1/enrich
-frontend/   Vite + React + TanStack (Query/Table) — CSV upload → results grid
+backend/    FastAPI (Python) — the API: /v1/categorize and /v1/enrich
+frontend/   Vite + React + TanStack — CSV upload → results grid
+models/     swappable Categorizer strategies (llm_incontext, bi/cross-encoder) + shared types
+data/       the unified dataset: transaction pool + labelings (+ taxonomies), split=train|eval
+evals/      the eval harness (runner + scorer) over data's eval split
+training/   fine-tunes the encoders/LLM from data's train split → pushes models to HF
 docker-compose.yml   Postgres (optional; request logging only)
 ```
 

@@ -3,15 +3,15 @@ from __future__ import annotations
 
 from models.types import Category, CategorizeResult, Transaction
 
-from evals.schema import EvalRecord
+from data.schema import Example
 from evals.score import is_correct, row_details, score
 
 
 def rec(rid, txid, gold, *, strata=None, acceptable=None, pair_id=None, cats=("A", "B")):
-    return EvalRecord(
-        id=rid,
+    return Example(
         transaction=Transaction(id=txid, description=f"tx-{txid}"),
         categories=[Category(name=c) for c in cats],
+        category_set_id="test",
         gold=gold,
         acceptable=acceptable,
         strata=strata or [],

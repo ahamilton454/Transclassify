@@ -1,16 +1,11 @@
-"""Fetch + sample + map the `DoDataThings/us-bank-transaction-categories-v2`
-dataset (Hugging Face, public/ungated) into the eval record schema.
+"""Fetch + sample the public `DoDataThings/us-bank-transaction-categories-v2` dataset
+into the pool as the `dodatathings` eval source (split=eval).
 
-Writes:
-  - evals/dodatathings/data.jsonl                  (sampled records, gitignored)
-  - evals/category_sets/dodatathings_us_v2.json    (the dataset's fixed label space)
+Writes labelings/transactions under data/sources/dodatathings/ and the discovered
+label space to data/category_sets/dodatathings_us_v2.json. External, fixed-taxonomy,
+community-labeled — a regression signal, not the trusted set (audit before trusting).
 
-Usage:  backend/.venv/bin/python evals/dodatathings/prepare.py --limit 200
-
-This is the *external, fixed-taxonomy* eval — a regression signal and an external
-number, NOT the trusted decision-maker. It's a community upload (realistic
-sign-prefixed US bank strings, ~17 categories), so its gold is someone else's
-labels — audit a sample before trusting. Streaming + first-N for reproducibility.
+  python data/fetch_dodatathings.py --limit 200
 """
 from __future__ import annotations
 
@@ -20,12 +15,16 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT_DIR = Path(__file__).resolve().parent
-CATEGORY_SETS_DIR = ROOT / "evals" / "category_sets"
+ROOT = Path(__file__).resolve().parents[1]
+for _p in (str(ROOT), str(ROOT / "backend")):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+from data.schema import Labeling  # noqa: E402
+from data.store import CATEGORY_SETS_DIR, append, make_transaction  # noqa: E402
+
 DATASET = "DoDataThings/us-bank-transaction-categories-v2"
 CATEGORY_SET_ID = "dodatathings_us_v2"
-
 DESC_KEYS = ["description", "transaction", "text", "narration", "memo", "raw", "name"]
 LABEL_KEYS = ["category", "label", "class", "target"]
 PREFIX_RE = re.compile(r"[A-Z]{2,4}\s*\*|\bPOS\b|\bACH\b|\bSQ\b|TST\*|\bPPD\b|\bEFT\b", re.I)
@@ -44,7 +43,6 @@ def _strata(desc: str) -> list[str]:
     tags = ["external"]
     if PREFIX_RE.search(desc):
         tags.append("processor-prefix")
-    # crude long-tail heuristic: digit-heavy / star-coded => messy
     if sum(ch.isdigit() for ch in desc) >= 4 or "*" in desc:
         tags.append("tail")
     return tags
@@ -54,7 +52,6 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=200)
     args = ap.parse_args()
-
     try:
         from datasets import load_dataset
     except ImportError:
@@ -66,15 +63,13 @@ def main() -> None:
         except Exception as exc:  # noqa: BLE001
             raise SystemExit(f"Could not load {DATASET!r}: {exc}") from exc
 
-    # Peek one row to discover column names, then re-open (streaming is consumed).
     first = next(iter(_open()))
     desc_key = _pick(list(first.keys()), DESC_KEYS)
     label_key = _pick(list(first.keys()), LABEL_KEYS)
     print(f"mapping: description<-{desc_key!r}  gold<-{label_key!r}")
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
     labels: set[str] = set()
-    rows = []
+    txns, labs = [], []
     for i, row in enumerate(_open()):
         if i >= args.limit:
             break
@@ -83,24 +78,24 @@ def main() -> None:
         if not desc or not gold:
             continue
         labels.add(gold)
-        rows.append(
-            {
-                "id": f"dd_{i:05d}",
-                "transaction": {"id": f"dd_{i:05d}", "description": desc},
-                "category_set_id": CATEGORY_SET_ID,
-                "gold": gold,
-                "strata": _strata(desc),
-            }
+        tx = make_transaction(desc)
+        txns.append(tx)
+        labs.append(
+            Labeling(
+                transaction_id=tx.id,
+                category_set_id=CATEGORY_SET_ID,
+                gold=gold,
+                strata=_strata(desc),
+                split="eval",
+                source="dodatathings",
+            )
         )
 
-    # Write the discovered label space as a category set (no descriptions).
     cat_set = {"id": CATEGORY_SET_ID, "categories": [{"name": n} for n in sorted(labels)]}
     (CATEGORY_SETS_DIR / f"{CATEGORY_SET_ID}.json").write_text(json.dumps(cat_set, indent=2))
-
-    data_path = OUT_DIR / "data.jsonl"
-    data_path.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
-    print(f"wrote {len(rows)} records to {data_path} across {len(labels)} categories")
+    append("dodatathings", txns, labs)
+    print(f"appended {len(labs)} dodatathings labelings across {len(labels)} categories")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
