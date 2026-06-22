@@ -34,3 +34,5 @@ data/category_sets/dodatathings_us_v2.json
 # Training artifacts (trained weights go to HF Hub, not git)
 training/**/output/
 training/.venv/
+training/llm_lora/mlx_data/
+training/llm_lora/adapters/
