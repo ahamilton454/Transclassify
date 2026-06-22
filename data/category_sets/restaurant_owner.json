@@ -1,0 +1,21 @@
+{
+  "id": "restaurant_owner",
+  "categories": [
+    { "name": "Food & Beverage Suppliers", "description": "food, produce, meat, and non-alcoholic beverage suppliers (COGS)" },
+    { "name": "Liquor & Bar", "description": "beer, wine, and spirits distributors" },
+    { "name": "Payroll & Wages", "description": "kitchen and front-of-house staff wages, payroll runs" },
+    { "name": "POS & Processing Fees", "description": "point-of-sale and card-processing fees" },
+    { "name": "Rent & Lease", "description": "restaurant space rent and equipment leases" },
+    { "name": "Utilities", "description": "electricity, gas, water, internet, trash" },
+    { "name": "Kitchen Equipment & Smallwares", "description": "ovens, refrigeration, cookware, smallwares" },
+    { "name": "Repairs & Maintenance", "description": "equipment repair, plumbing, HVAC, upkeep" },
+    { "name": "Marketing & Delivery Apps", "description": "advertising and delivery platforms (DoorDash/Uber Eats/Grubhub)" },
+    { "name": "Cleaning & Sanitation", "description": "cleaning services, supplies, linen, pest control" },
+    { "name": "Licenses & Permits", "description": "health permits, liquor license, business licenses" },
+    { "name": "Insurance", "description": "liability, property, and workers' comp insurance" },
+    { "name": "Sales Revenue", "description": "card-batch deposits and sales revenue received" },
+    { "name": "Professional Fees", "description": "accounting, legal, consulting" },
+    { "name": "Bank Fees", "description": "bank fees, ATM fees, interest charges" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

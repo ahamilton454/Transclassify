@@ -1,0 +1,22 @@
+{
+  "id": "student_budget",
+  "categories": [
+    { "name": "Tuition & Fees", "description": "university tuition, enrollment and course fees" },
+    { "name": "Textbooks & Supplies", "description": "textbooks, course materials, school supplies" },
+    { "name": "Campus Dining", "description": "meal plan, dining hall, campus cafes" },
+    { "name": "Groceries", "description": "supermarkets and grocery stores" },
+    { "name": "Restaurants & Takeout", "description": "restaurants, fast food, takeout, delivery" },
+    { "name": "Coffee Shops", "description": "coffee shops and cafes" },
+    { "name": "Transportation", "description": "transit passes, rideshare, parking, bikeshare" },
+    { "name": "Rent & Housing", "description": "rent, dorm, off-campus housing" },
+    { "name": "Utilities & Phone", "description": "electricity, internet, mobile phone" },
+    { "name": "Subscriptions", "description": "streaming, music, software, memberships" },
+    { "name": "Entertainment", "description": "movies, events, games, nights out" },
+    { "name": "Health & Wellness", "description": "pharmacy, clinic, gym, toiletries" },
+    { "name": "Shopping", "description": "clothing, electronics, general retail" },
+    { "name": "Income", "description": "part-time job pay, financial aid, deposits from family" },
+    { "name": "Transfers", "description": "account transfers, P2P (Venmo/Zelle), card payments" },
+    { "name": "Fees", "description": "bank fees, ATM fees, overdraft, interest" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

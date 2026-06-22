@@ -1,0 +1,21 @@
+{
+  "id": "rental_property",
+  "categories": [
+    { "name": "Rental Income", "description": "rent payments received from tenants" },
+    { "name": "Mortgage & Interest", "description": "mortgage payments and loan interest on the property" },
+    { "name": "Property Taxes", "description": "county and municipal property tax payments" },
+    { "name": "Insurance", "description": "landlord, hazard, and liability insurance premiums" },
+    { "name": "Repairs & Maintenance", "description": "plumbing, HVAC, electrical, handyman, general upkeep" },
+    { "name": "Property Management", "description": "property manager and leasing-agent fees" },
+    { "name": "Utilities", "description": "owner-paid electricity, water, gas, trash, internet" },
+    { "name": "HOA & Condo Dues", "description": "homeowners-association and condo fees" },
+    { "name": "Landscaping & Cleaning", "description": "lawn care, snow removal, turnover cleaning" },
+    { "name": "Supplies & Materials", "description": "hardware-store materials, appliances, fixtures" },
+    { "name": "Advertising & Leasing", "description": "listing sites, tenant screening, leasing costs" },
+    { "name": "Professional Fees", "description": "legal, accounting, eviction, permits" },
+    { "name": "Travel & Mileage", "description": "trips to the property, mileage, tolls" },
+    { "name": "Bank & Loan Fees", "description": "bank fees, wire fees, loan servicing charges" },
+    { "name": "Capital Improvements", "description": "roof, renovation, major appliance, large upgrades" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

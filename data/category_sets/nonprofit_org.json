@@ -1,0 +1,20 @@
+{
+  "id": "nonprofit_org",
+  "categories": [
+    { "name": "Donations & Contributions", "description": "individual donations and contributions received" },
+    { "name": "Grants Received", "description": "foundation and government grant income" },
+    { "name": "Program Expenses", "description": "direct costs of delivering programs and services" },
+    { "name": "Payroll & Wages", "description": "staff salaries, wages, and payroll runs" },
+    { "name": "Fundraising & Events", "description": "fundraising campaigns, galas, event costs" },
+    { "name": "Rent & Utilities", "description": "office rent, electricity, water, internet" },
+    { "name": "Supplies & Equipment", "description": "office supplies, equipment, furniture" },
+    { "name": "Software & Subscriptions", "description": "SaaS, CRM, donor tools, memberships" },
+    { "name": "Travel", "description": "staff and volunteer travel, lodging, mileage" },
+    { "name": "Professional Fees", "description": "legal, accounting, audit, consulting" },
+    { "name": "Marketing & Outreach", "description": "advertising, printing, website, outreach" },
+    { "name": "Insurance", "description": "liability, directors & officers, property insurance" },
+    { "name": "Bank & Merchant Fees", "description": "bank fees, payment-processing, credit-card fees" },
+    { "name": "Membership Dues", "description": "dues paid to affiliated or professional bodies" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}

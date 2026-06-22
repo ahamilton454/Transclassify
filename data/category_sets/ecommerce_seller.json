@@ -1,0 +1,20 @@
+{
+  "id": "ecommerce_seller",
+  "categories": [
+    { "name": "Inventory & Wholesale", "description": "goods, raw materials, and wholesale inventory (COGS)" },
+    { "name": "Shipping & Postage", "description": "USPS, UPS, FedEx, postage and freight" },
+    { "name": "Marketplace Fees", "description": "Amazon, Etsy, eBay, Shopify seller and listing fees" },
+    { "name": "Payment Processing", "description": "Stripe, PayPal, Square processing fees" },
+    { "name": "Advertising", "description": "Meta, Google, TikTok ads and promotions" },
+    { "name": "Software & SaaS", "description": "store platform, apps, automation, analytics tools" },
+    { "name": "Packaging Supplies", "description": "boxes, mailers, labels, tape, packing materials" },
+    { "name": "Returns & Refunds", "description": "customer refunds, returns, chargebacks" },
+    { "name": "Warehousing & Fulfillment", "description": "3PL, FBA, storage and fulfillment fees" },
+    { "name": "Sales Revenue", "description": "marketplace and processor payouts/deposits received" },
+    { "name": "Equipment", "description": "printers, cameras, computers, work equipment" },
+    { "name": "Professional Fees", "description": "accounting, legal, consulting" },
+    { "name": "Travel", "description": "trade shows, sourcing trips, mileage, lodging" },
+    { "name": "Bank Fees", "description": "bank fees, wire fees, interest charges" },
+    { "name": "Other", "description": "anything that does not fit the above" }
+  ]
+}
