@@ -19,6 +19,13 @@ backend/.venv/bin/mlx_lm.lora \
 ~10–25 min on Apple Silicon for the 0.5B (downloads the base ~1GB on first run; watch the loss
 drop). Faster/lighter base: `mlx-community/Qwen2.5-0.5B-Instruct-4bit`. CLI alt: `python -m mlx_lm lora`.
 
+**macOS GPU watchdog.** On some Macs a longer run aborts with
+`libc++abi … [METAL] Command buffer execution failed: Impacting Interactivity` (exit 134) — the OS kills
+GPU command buffers that run too long, most often right at a validation pass. Mitigations that let a full
+epoch finish: smaller `--batch-size 4`, `--max-seq-length 512`, `--grad-checkpoint` (drops peak mem
+~8.5→3.2 GB), and **disable mid-train validation** with `--steps-per-eval 99999`. Checkpoints save every
+`--save-every` iters, so if it still trips you can resume with `--resume-adapter-file adapters/adapters.safetensors`.
+
 Then fuse + serve to eval (see "eval-ing it" below):
 ```bash
 backend/.venv/bin/mlx_lm.fuse --model Qwen/Qwen2.5-0.5B-Instruct \

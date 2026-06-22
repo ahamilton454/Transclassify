@@ -47,12 +47,12 @@ Trained on `synthetic_v2` (9,943 examples, 6 taxonomies). Eval on `synthetic_v2`
 |---|---|---|---|---|---|---|
 | bge-bi-v2 | bi_encoder | bge-small-en-v1.5 | `training/bi_encoder/output` | **60.1%** | 63.6% | 49.4% |
 | bge-cross-v2 | cross_encoder | bge-reranker-base | `training/cross_encoder/output` | 55.9% | 59.1% | 46.0% |
-| qwen-lora-v2 | bare_category | Qwen2.5-0.5B | `training/llm_lora/output` → Ollama | 41.8%¹ | 45.6% | 30.2% |
+| qwen-lora-v2 | bare_category | Qwen2.5-0.5B | `training/llm_lora/output` → Ollama | 51.6% | 55.9% | 38.8% |
 
-¹ Qwen LoRA is **undertrained**: the macOS Metal watchdog (`Impacting Interactivity`) aborted training
-near each validation step, so it completed only ~800 iters × batch 4 ≈ 3.2k samples seen (val loss 0.195)
-vs the encoders' full epoch. Its number is a floor, not a fair ceiling — see `llm_lora/README.md` for the
-watchdog mitigation (smaller batch / grad-checkpoint / disable mid-train validation).
+Qwen LoRA: a full epoch over 9,943 (2,500 iters × batch 4, train loss 0.167). An earlier undertrained run
+(~3.2k samples) scored only 41.8% — the macOS Metal watchdog (`Impacting Interactivity`) aborts training
+near validation steps, so the full run uses smaller batch + grad-checkpoint + **disabled mid-train
+validation** (see `llm_lora/README.md`).
 
 **Realism cost:** moving from the old clean LLM-generated set to `synthetic_v2`'s realistic strings
 dropped every model (bi 75.7→60.1, cross 68.5→55.9). **BYO-generalization cost:** every model loses
