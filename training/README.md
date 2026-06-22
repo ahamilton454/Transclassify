@@ -40,14 +40,21 @@ here pins the training deps (used by HF Jobs / for reproducibility; `peft`/`trl`
 
 ## Trained-model registry
 
-| name | strategy | base | HF id / path | eval (llm_generated overall) |
-|---|---|---|---|---|
-| bge-bi-v1 | bi_encoder | bge-small-en-v1.5 | `training/bi_encoder/output` | **75.7%** (zero-shot was 50.0%) |
-| _bge-cross-v1_ | cross_encoder | bge-reranker-base | _(run to fill)_ | _(run to fill)_ |
+Trained on `synthetic_v2` (9,943 examples, 6 taxonomies). Eval on `synthetic_v2` eval
+(n=1,923, 8 taxonomies = the 6 trained **in-distribution** + 2 **held-out** the models never see).
 
-Reference points on `llm_generated` (n=1013): zero-shot bi 50% · zero-shot cross 38% · gpt-5-mini 86%.
-The bi-encoder fine-tune (1 epoch, 5.8k synthetic examples, **~44s** on a Mac) jumped **50 → 75.7%**.
+| name | strategy | base | path | overall | in-dist (6) | held-out (2) |
+|---|---|---|---|---|---|---|
+| bge-bi-v2 | bi_encoder | bge-small-en-v1.5 | `training/bi_encoder/output` | **60.1%** | 63.6% | 49.4% |
+| bge-cross-v2 | cross_encoder | bge-reranker-base | `training/cross_encoder/output` | 55.9% | 59.1% | 46.0% |
+| qwen-lora-v2 | bare_category | Qwen2.5-0.5B | `training/llm_lora/output` → Ollama | 41.8%¹ | 45.6% | 30.2% |
 
-Note: the cross-encoder fine-tune is ~**40 min** on CPU (bigger model, N×M pairs) — trigger it
-explicitly (or on a GPU / HF Job). The bi-encoder is the priority since it also meets the throughput
-goal; a trained cross-encoder may score higher but is slower at inference.
+¹ Qwen LoRA is **undertrained**: the macOS Metal watchdog (`Impacting Interactivity`) aborted training
+near each validation step, so it completed only ~800 iters × batch 4 ≈ 3.2k samples seen (val loss 0.195)
+vs the encoders' full epoch. Its number is a floor, not a fair ceiling — see `llm_lora/README.md` for the
+watchdog mitigation (smaller batch / grad-checkpoint / disable mid-train validation).
+
+**Realism cost:** moving from the old clean LLM-generated set to `synthetic_v2`'s realistic strings
+dropped every model (bi 75.7→60.1, cross 68.5→55.9). **BYO-generalization cost:** every model loses
+~13–15 points on the 2 held-out taxonomies — the honest bring-your-own-categories number. The bi-encoder
+keeps a small lead throughout and is fastest, so it stays the local workhorse.
