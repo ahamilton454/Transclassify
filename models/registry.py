@@ -7,12 +7,14 @@ future strategies (embedding, cross-encoder, distilled) plug in.
 from __future__ import annotations
 
 from .base import Categorizer
+from .bare_category.categorizer import BareCategoryCategorizer
 from .bi_encoder.categorizer import BiEncoderCategorizer
 from .cross_encoder.categorizer import CrossEncoderCategorizer
 from .llm_incontext.categorizer import LLMInContextCategorizer
 
 STRATEGIES = {
     "llm_incontext": LLMInContextCategorizer,
+    "bare_category": BareCategoryCategorizer,
     "bi_encoder": BiEncoderCategorizer,
     "cross_encoder": CrossEncoderCategorizer,
 }

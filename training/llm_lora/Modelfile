@@ -1,0 +1,14 @@
+# Import the MLX-fused Qwen2.5-0.5B categorizer into Ollama (direct from safetensors).
+#   ollama create transclassify-qwen -f training/llm_lora/Modelfile
+#   ollama run transclassify-qwen "..."
+FROM ./output
+
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{ if .Prompt }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+{{ end }}<|im_start|>assistant
+{{ .Response }}<|im_end|>
+"""
+PARAMETER stop "<|im_end|>"
+PARAMETER temperature 0
