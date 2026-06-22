@@ -47,7 +47,7 @@ async def main() -> None:
     ap.add_argument("--model", default="ollama_chat/transclassify-qwen")
     ap.add_argument("--i", type=int, default=0, help="which eval example index")
     ap.add_argument("--desc", default=None, help="ad-hoc description (overrides --i's text)")
-    ap.add_argument("--set", default="llm_generated")
+    ap.add_argument("--set", default="synthetic_v2")
     args = ap.parse_args()
 
     records = load(split="eval", source=args.set)

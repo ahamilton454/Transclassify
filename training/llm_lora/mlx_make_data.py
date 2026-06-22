@@ -49,7 +49,7 @@ def main() -> None:
     examples = load(split="train")
     if not examples:
         raise SystemExit(
-            "no train data — run: data/generate.py --source training_v1 --split train --total 5000"
+            "no train data — run: data/generate.py --source synthetic_v2 --split train --total 10000"
         )
     rows = [to_row(e) for e in examples]
     random.Random(0).shuffle(rows)

@@ -13,7 +13,7 @@ harness (runner + scorer). `--set` selects a `data/` source (all on the eval spl
 backend/.venv/bin/python evals/run.py --set hand_labelled --param model=openai/gpt-5.2
 backend/.venv/bin/python evals/run.py --set all --param model=gpt-5-mini --limit 50
 ```
-- `--set` — `hand_labelled` | `llm_generated` | `dodatathings` | `all`
+- `--set` — `hand_labelled` | `synthetic_v2` | `dodatathings` | `all`
 - `--categorizer` — which strategy from `/models` (default `llm_incontext`)
 - `--param KEY=VALUE` — that strategy's constructor args, repeatable. For `llm_incontext` the key is
   `model` (a LiteLLM id); a bi-encoder strategy would take e.g. `--param checkpoint=BAAI/bge-small-en`.
@@ -38,7 +38,7 @@ backend/.venv/bin/python evals/run.py --set all --param model=gpt-5-mini --limit
 | Set | What it tests | Trust | Role |
 |---|---|---|---|
 | `dodatathings` | head accuracy on a real public dataset, fixed taxonomy | medium (not our labels; leakage risk) | external benchmark / regression |
-| `llm_generated` | breadth, BYO, edge cases | lower (synthetic) | stress; small **dummy** set today |
+| `synthetic_v2` | breadth, BYO, realistic formats, held-out taxonomies | lower (synthetic, LLM-gold) | primary stress set; 8 taxonomies, realistic surface form |
 | `hand_labelled` | tail + BYO on real strings | **high** | **the decision-maker**; small, grow it |
 
 Scoring is accuracy-only for v1; calibration, macro-F1, and hierarchy-aware partial credit are

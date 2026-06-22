@@ -6,13 +6,16 @@ Distills the LLM's labels into the small models. Trained artifacts go to **HF Hu
 ## The loop
 
 ```
-data/generate.py --source training_v1 --split train   →  train.py  →  save / push_to_hub
+data/generate.py --source synthetic_v2 --split train  →  train.py  →  save / push_to_hub
         →  evals/run.py --param model=<path-or-hf-id>  →  scorecard (vs zero-shot + gpt-5-mini)
 ```
 
-1. **Corpus** (in `data/`, not here — same generator as eval, just a different split):
+1. **Corpus** (in `data/`, not here — same generator as eval, just a different split). Trained on the
+   6 in-distribution taxonomies; eval also covers 2 held-out taxonomies the models never see:
    ```bash
-   backend/.venv/bin/python data/generate.py --source training_v1 --split train --total 5000
+   backend/.venv/bin/python data/generate.py --source synthetic_v2 --split train --total 10000 \
+     --taxonomies personal_budget freelancer_schedule_c small_business_coa \
+                  student_budget rental_property nonprofit_org
    ```
    Disjoint from eval by construction (`store.overlap_transaction_ids("train","eval")` must be empty).
 
@@ -25,7 +28,7 @@ data/generate.py --source training_v1 --split train   →  train.py  →  save /
 
 3. **Eval** the trained model through the existing harness:
    ```bash
-   backend/.venv/bin/python evals/run.py --set llm_generated --categorizer bi_encoder \
+   backend/.venv/bin/python evals/run.py --set synthetic_v2 --categorizer bi_encoder \
      --param model=training/bi_encoder/output      # or the HF id you pushed to
    ```
 

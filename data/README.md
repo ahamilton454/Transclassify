@@ -21,9 +21,12 @@ JSONL in place with **DuckDB** (`overlap_transaction_ids`, `counts_by`), and exp
 | source | split | tracked? | how to (re)build |
 |---|---|---|---|
 | `hand_labelled` | eval | **yes** (curated, git-legible) | edit `sources/hand_labelled/*.jsonl` by hand |
-| `llm_generated` | eval | no (regenerable) | `python data/generate.py --source llm_generated --split eval --total 1000` |
+| `synthetic_v2` | train + eval | no (regenerable) | `python data/generate.py --source synthetic_v2 --split {train\|eval} --total {10000\|2000}` |
 | `dodatathings` | eval | no (fetched) | `python data/fetch_dodatathings.py --limit 200` |
-| `training_v1` | train | no (regenerable) | `python data/generate.py --source training_v1 --split train --total 5000` |
+
+`synthetic_v2` is the hybrid generator (LLM merchants → `templates.py` layered engine; see
+`transaction_patterns.md`). Train covers the 6 in-distribution taxonomies; eval also covers 2 held-out
+taxonomies (`restaurant_owner`, `ecommerce_seller`) the models never train on — a bring-your-own-categories test.
 
 **Train ∩ eval = ∅** is enforced structurally: `generate.py` drops any string already in the opposite
 split, and `store.overlap_transaction_ids("train","eval")` must return empty.

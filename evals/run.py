@@ -38,7 +38,7 @@ from evals.score import ScoreReport, row_details, score  # noqa: E402
 
 EVALS_DIR = ROOT / "evals"
 # Eval "sets" are sources in the unified data layer (all on split="eval").
-SETS = ["llm_generated", "dodatathings", "hand_labelled"]
+SETS = ["synthetic_v2", "dodatathings", "hand_labelled"]
 
 
 def _coerce(value: str):
@@ -161,7 +161,7 @@ def write_report(
 
 async def main() -> None:
     ap = argparse.ArgumentParser(description="Run a categorization eval.")
-    ap.add_argument("--set", default="llm_generated", choices=[*SETS, "all"])
+    ap.add_argument("--set", default="synthetic_v2", choices=[*SETS, "all"])
     ap.add_argument(
         "--categorizer", default="llm_incontext", help="which strategy from /models (registry key)"
     )
